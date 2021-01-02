@@ -1,22 +1,19 @@
 import React, { Component } from 'react';
 // import Lists from './lists';
 import './todo.css'
-import { InputGroup, Button, FormControl, Container, Row, Col } from 'react-bootstrap';
+import { Button, Container, Row, Col } from 'react-bootstrap';
 import idGenerator from './idGenerator';
 import MyCard from './card'
+import AddTask from './addTasks';
+import Confirm from './removeModal';
 
 class Todo extends Component {
     state = {
         tasks: [],
-        inpValues: '',
-        selectedCard: new Set()
+        selectedCard: new Set(),
+        toggle: false,
     }
-    hendleChange = (ev) => {
-        this.setState({
-            inpValues: ev.target.value
-        })
-        console.log(ev.target.value)
-    }
+
     onCheacke = (taskId) => {
         const selectedCard = new Set(this.state.selectedCard)
         if (selectedCard.has(taskId)) {
@@ -28,31 +25,27 @@ class Todo extends Component {
             selectedCard: selectedCard
         })
     }
-    hendleClick = (ev) => {
-        const { inpValues } = this.state
-        if (!inpValues) {
-            return
-        }
+    hendleClick = (value) => {
         const myId = {
-            text: inpValues,
+            text: value,
             _id: idGenerator()
         }
         const newTasks = [myId, ...this.state.tasks]
 
         this.setState({
             tasks: newTasks,
-            inpValues: ""
         })
     }
-    hedleKeydown = (ev) => {
-        if (ev.key === 'Enter') {
-            this.hendleClick()
-        }
-    }
+
     hendleDelete = (taskId) => {
         const delId = this.state.tasks.filter(task => task._id !== taskId);
         this.setState({
             tasks: delId,
+        })
+    }
+    toggleConfirm = () => {
+        this.setState({
+            toggle: !this.state.toggle
         })
     }
     handleRemove = () => {
@@ -62,11 +55,12 @@ class Todo extends Component {
         })
         this.setState({
             tasks,
+            toggle:false,
             selectedCard: new Set()
         })
     }
     render() {
-        const { inpValues, selectedCard } = this.state
+        const { toggle, selectedCard } = this.state
         const tasksArr = this.state.tasks.map((task, i) => {
             return (
                 <Col key={i} xs={12} sm={6} md={4} lg={3} xl={2}>
@@ -74,46 +68,49 @@ class Todo extends Component {
                         data={task}
                         onRemove={this.hendleDelete}
                         onCheacke={this.onCheacke}
-
+                        disabled={!!selectedCard.size}
                     />
                 </Col>
 
             )
         })
         return (
-            <div className="todo">
+            <div>
                 <Container>
-                    <Row className="justify-content-center">
-                        <Col md={8} xl={2} lg={3} sm={6}>
-                            <InputGroup className="mb-3">
-                                <FormControl
-                                    aria-describedby="basic-addon1"
-                                    value={inpValues}
-                                    onChange={this.hendleChange}
-                                    onKeyDown={(ev) => this.hedleKeydown(ev)}
+                    <Container>
+                        <Row className="justify-content-center">
+                            <Col md={8} xl={2} lg={3} sm={6}>
+                                <AddTask
+                                    onAdd={this.hendleClick}
+                                    disabled={!!selectedCard.size}
                                 />
-                                <InputGroup.Append>
-                                    <Button
-                                        variant="outline-secondary"
-                                        onClick={this.hendleClick}
-                                        disabled={!inpValues}
-                                    >Button</Button>
-                                </InputGroup.Append>
-                            </InputGroup>
+                            </Col>
+                        </Row>
+                    </Container>
+
+                    <Row>
+                        {tasksArr}
+                    </Row>
+                    <Row>
+                        <Col xs={4}>
+                            <Button
+                                variant='outline-danger'
+                                onClick={this.toggleConfirm}
+                                disabled={selectedCard.size === 0 ? true : false}
+                            >
+                                Remove Selected
+                            </Button>
                         </Col>
                     </Row>
                 </Container>
+                {toggle &&
+                <Confirm
+                    onSubmite={this.handleRemove}
+                    onClose={this.toggleConfirm}
+                    count={selectedCard.size}
+                />
+                }
 
-                <Row>
-                    {tasksArr}
-                </Row>
-                <Button
-                    variant='outline-danger'
-                    onClick={this.handleRemove}
-                    disabled={selectedCard.size === 0 ? true : false}
-                >
-                    Remove Selected
-                </Button>
             </div>
         );
     }
