@@ -21,16 +21,36 @@ export default class AddTask extends Component {
         }
     }
 
-    hendleClick = (value) => {
+                // ԱՌԱՆՑ  ՍԵՐՎԵՐ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ
+
+    // hendleClick = (value) => {
+    //     const {inpValues}= this.state
+    //     if(!inpValues){
+    //         return
+    //     }
+    //     this.props.onAdd(inpValues)
+    //     this.setState({
+    //         inpValues: ''
+    //     })
+    // }
+
+                // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ
+
+    hendleClick = () => {
         const {inpValues}= this.state
         if(!inpValues){
             return
         }
-        this.props.onAdd(inpValues)
+        const task = {
+            title: inpValues
+        }
+        this.props.onAdd(task)
         this.setState({
             inpValues: ''
         })
     }
+
+
     render() {
         const {inpValues} = this.state;
         const {disabled} = this.props;

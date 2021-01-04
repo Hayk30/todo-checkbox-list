@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 // import Lists from './lists';
 import './todo.css'
 import { Button, Container, Row, Col } from 'react-bootstrap';
-import idGenerator from './idGenerator';
+// import idGenerator from './idGenerator'; // ԱՌԱՆՑ  ՍԵՐՎԵՐ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ 
 import MyCard from './card'
 import AddTask from './addTasks';
 import Confirm from './removeModal';
@@ -16,6 +16,31 @@ class Todo extends PureComponent {
         toggle: false,
     }
 
+        // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ՍԿԻԶԲ
+
+    componentDidMount() {
+        fetch("http://localhost:3001/task", {
+            method: "GET",
+            headers: {
+                "content-type": "application/json",
+            },
+        })
+        .then((response) =>  response.json())
+        .then((response) => {
+            if(response.error) {
+                throw response.error
+            }
+            this.setState({
+                tasks: response,
+            })       
+        }) 
+        .catch((error) => {
+            console.log(error)
+        })
+    }
+
+        // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ԱՎԱՐՏ
+
     onCheacke = (taskId) => {
         const selectedCard = new Set(this.state.selectedCard)
         if (selectedCard.has(taskId)) {
@@ -27,17 +52,47 @@ class Todo extends PureComponent {
             selectedCard: selectedCard
         })
     }
-    hendleClick = (value) => {
-        const myId = {
-            text: value,
-            _id: idGenerator()
-        }
-        const newTasks = [myId, ...this.state.tasks]
+                // ԱՌԱՆՑ  ՍԵՐՎԵՐ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ
 
-        this.setState({
-            tasks: newTasks,
+    // hendleClick = (value) => {
+    //     const myId = {
+    //         text: value,
+    //         _id: idGenerator()
+    //     }
+    //     const newTasks = [myId, ...this.state.tasks]
+
+    //     this.setState({
+    //         tasks: newTasks,
+    //     })
+    // }
+
+                // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ՍԿԻԶԲ
+
+    hendleClick = (data) => {
+        const body = JSON.stringify(data)
+        fetch("http://localhost:3001/task", {
+            method: "POST",
+            headers: {
+                "content-type": "application/json",
+            },
+            body
+        })
+        .then((response) =>  response.json())
+        .then((response) => {
+            if(response.error) {
+                throw response.error
+            }
+            const tasks = [response, ...this.state.tasks]
+            this.setState({
+                tasks: tasks,
+            })       
+        })
+        .catch((error) => {
+            console.log(error)
         })
     }
+
+                // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ԱՎԱՐՏ
 
     hendleDelete = (taskId) => {
         const delId = this.state.tasks.filter(task => task._id !== taskId);

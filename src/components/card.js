@@ -20,10 +20,23 @@ class MyCard extends Component {
                         onClick={() => this.props.onCheacke(task._id)}
                         key={task._id}
                     />
-                    <Card.Title>{task.text.slice(0, 4) + '...'}</Card.Title>
+
+                            {/* ԱՌԱՆՑ  ՍԵՐՎԵՐ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ */}
+
+                    {/* <Card.Title>{task.text.slice(0, 4) + '...'}</Card.Title>
                     <Card.Text>
                         {task.text}
+                    </Card.Text> */}
+
+                            {/* ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ՍԿԻԶԲ */}
+
+                    <Card.Title>{task.title}</Card.Title>
+                    <Card.Text>
+                        {task.description}
                     </Card.Text>
+
+                            {/* ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ԱՎԱՐՏ */}
+
                     <Button 
                         variant="danger" 
                         onClick={() => this.props.onRemove(task._id)} 
