@@ -3,9 +3,13 @@ import { Button,InputGroup,FormControl } from 'react-bootstrap';
 
 
 export default class AddTask extends Component {
-    state = {
-        inpValues: '',
+    constructor(props) {
+        super(props);
+        this.state = {
+            inpValues: '',
+        }    
     }
+    
     hendleChange = (ev) => {
         this.setState({
             inpValues: ev.target.value
@@ -45,7 +49,9 @@ export default class AddTask extends Component {
                         variant="outline-secondary"
                         onClick={this.hendleClick}
                         disabled={!inpValues}
-                    >Button</Button>
+                    >
+                        Button
+                    </Button>
                 </InputGroup.Append>
             </InputGroup>
         )

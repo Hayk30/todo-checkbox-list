@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 // import Lists from './lists';
 import './todo.css'
 import { Button, Container, Row, Col } from 'react-bootstrap';
@@ -6,9 +6,11 @@ import idGenerator from './idGenerator';
 import MyCard from './card'
 import AddTask from './addTasks';
 import Confirm from './removeModal';
+import EditTaskModal from './editTaskModal';
 
-class Todo extends Component {
+class Todo extends PureComponent {
     state = {
+        editTask: null,
         tasks: [],
         selectedCard: new Set(),
         toggle: false,
@@ -48,6 +50,11 @@ class Todo extends Component {
             toggle: !this.state.toggle
         })
     }
+    toggleEditModal=(task)=> {
+        this.setState({
+            editTask: task
+        })
+    }
     handleRemove = () => {
         let tasks = [...this.state.tasks]
         this.state.selectedCard.forEach((id) => {
@@ -59,8 +66,17 @@ class Todo extends Component {
             selectedCard: new Set()
         })
     }
+    saveTask=(editedTask)=> {
+        const tasks=[...this.state.tasks]
+        const foundTextIndex=tasks.findIndex((task)=>task._id === editedTask._id)
+        tasks[foundTextIndex]=editedTask
+        this.setState({
+            tasks:tasks,
+            editTask: null,
+        })
+    }
     render() {
-        const { toggle, selectedCard } = this.state
+        const { toggle, selectedCard, editTask } = this.state
         const tasksArr = this.state.tasks.map((task, i) => {
             return (
                 <Col key={i} xs={12} sm={6} md={4} lg={3} xl={2}>
@@ -69,6 +85,7 @@ class Todo extends Component {
                         onRemove={this.hendleDelete}
                         onCheacke={this.onCheacke}
                         disabled={!!selectedCard.size}
+                        onEdit={()=>this.toggleEditModal(task)}
                     />
                 </Col>
 
@@ -109,6 +126,14 @@ class Todo extends Component {
                     onClose={this.toggleConfirm}
                     count={selectedCard.size}
                 />
+                }
+                {
+                    !!editTask &&
+                    <EditTaskModal
+                        data={editTask}
+                        onSave={this.saveTask}
+                        onClose={() => this.toggleEditModal(null)}
+                    />
                 }
 
             </div>

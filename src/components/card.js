@@ -24,7 +24,18 @@ class MyCard extends Component {
                     <Card.Text>
                         {task.text}
                     </Card.Text>
-                    <Button variant="danger" onClick={() => this.props.onRemove(task._id)} disabled={disabled}>Delete</Button>
+                    <Button 
+                        variant="danger" 
+                        onClick={() => this.props.onRemove(task._id)} 
+                        disabled={disabled}>
+                        Delete
+                    </Button>
+                    <Button 
+                        variant="primary" 
+                        onClick={() => this.props.onEdit(task)} 
+                        disabled={disabled}>
+                        Edit
+                    </Button>
                 </Card.Body>
             </Card>
         );
