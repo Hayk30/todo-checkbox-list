@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button,InputGroup,FormControl } from 'react-bootstrap';
+import './addTasks.css'
 
 
 export default class AddTask extends Component {
@@ -55,18 +56,17 @@ export default class AddTask extends Component {
         const {inpValues} = this.state;
         const {disabled} = this.props;
         return (
-            <InputGroup className="mb-3">
-                <FormControl
+            <InputGroup className="mb-4">
+                <FormControl className="formContr"
                     aria-describedby="basic-addon1"
                     value={inpValues}
                     onChange={this.hendleChange}
                     onKeyDown={(ev) => this.hedleKeydown(ev)}
                     disabled={disabled}
-
                 />
                 <InputGroup.Append>
                     <Button
-                        variant="outline-secondary"
+                        variant="secondary"
                         onClick={this.hendleClick}
                         disabled={!inpValues}
                     >

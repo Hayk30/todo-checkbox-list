@@ -94,12 +94,86 @@ class Todo extends PureComponent {
 
                 // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ԱՎԱՐՏ
 
+                // ԱՌԱՆՑ  ՍԵՐՎԵՐ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ
+
+    // hendleDelete = (taskId) => {
+    //     const delId = this.state.tasks.filter(task => task._id !== taskId);
+    //     this.setState({
+    //         tasks: delId,
+    //     })
+    // }
+
+    // handleRemove = () => {
+    //     let tasks = [...this.state.tasks]
+    //     this.state.selectedCard.forEach((id) => {
+    //         tasks = tasks.filter((task) => task._id !== id)
+    //     })
+    //     this.setState({
+    //         tasks,
+    //         toggle:false,
+    //         selectedCard: new Set()
+    //     })
+    // }
+                 // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ՍԿԻԶԲ
+
     hendleDelete = (taskId) => {
-        const delId = this.state.tasks.filter(task => task._id !== taskId);
-        this.setState({
-            tasks: delId,
+        fetch(`http://localhost:3001/task/${taskId}`, {
+            method: "DELETE",
+            headers: {
+                "content-type": "application/json",
+            },
+        })
+        .then((response) =>  response.json())
+        .then((response) => {
+            if(response.error) {
+                throw response.error
+            }
+            const delId = this.state.tasks.filter(task => task._id !== taskId);
+            this.setState({
+                tasks: delId,
+            })      
+        })
+        .catch((error) => {
+            console.log(error)
         })
     }
+
+    handleRemove = () => {
+        const body={
+            tasks: [...this.state.selectedCard]
+        }
+
+        fetch("http://localhost:3001/task/", {
+            method: "PATCH",
+            headers: {
+                "content-type": "application/json",
+            },
+            body: JSON.stringify(body),
+        })
+        .then((response) =>  response.json())
+        .then((response) => {
+            if(response.error) {
+                throw response.error
+            }
+
+            let tasks = [...this.state.tasks]
+
+            this.state.selectedCard.forEach((id) => {
+                tasks = tasks.filter((task) => task._id !== id)
+            })
+            this.setState({
+                tasks,
+                toggle:false,
+                selectedCard: new Set()
+            })     
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    }
+
+                // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ԱՎԱՐՏ
+
     toggleConfirm = () => {
         this.setState({
             toggle: !this.state.toggle
@@ -110,31 +184,54 @@ class Todo extends PureComponent {
             editTask: task
         })
     }
-    handleRemove = () => {
-        let tasks = [...this.state.tasks]
-        this.state.selectedCard.forEach((id) => {
-            tasks = tasks.filter((task) => task._id !== id)
-        })
-        this.setState({
-            tasks,
-            toggle:false,
-            selectedCard: new Set()
-        })
-    }
+
+                // ԱՌԱՆՑ  ՍԵՐՎԵՐ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ
+
+    // saveTask=(editedTask)=> {
+    //     const tasks=[...this.state.tasks]
+    //     const foundTextIndex=tasks.findIndex((task)=>task._id === editedTask._id)
+    //     tasks[foundTextIndex]=editedTask
+    //     this.setState({
+    //         tasks:tasks,
+    //         editTask: null,
+    //     })
+    // }
+
+                 // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ՍԿԻԶԲ
+    
     saveTask=(editedTask)=> {
-        const tasks=[...this.state.tasks]
-        const foundTextIndex=tasks.findIndex((task)=>task._id === editedTask._id)
-        tasks[foundTextIndex]=editedTask
-        this.setState({
-            tasks:tasks,
-            editTask: null,
+        fetch(`http://localhost:3001/task/${editedTask._id}`, {
+            method: "PUT",
+            headers: {
+                "content-type": "application/json",
+            },
+            body: JSON.stringify(editedTask),
+        })
+        .then((response) =>  response.json())
+        .then((response) => {
+            if(response.error) {
+                throw response.error
+            }
+            const tasks=[...this.state.tasks]
+            const foundTextIndex=tasks.findIndex((task)=>task._id === editedTask._id)
+            tasks[foundTextIndex]=response
+            this.setState({
+                tasks:tasks,
+                editTask: null,
+            })
+                 
+        })
+        .catch((error) => {
+            console.log(error)
         })
     }
+                // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ԱՎԱՐՏ
+
     render() {
         const { toggle, selectedCard, editTask } = this.state
         const tasksArr = this.state.tasks.map((task, i) => {
             return (
-                <Col key={i} xs={12} sm={6} md={4} lg={3} xl={2}>
+                <Col key={i} xs={6} md={3} xl={2} className='mb-3'>
                     <MyCard
                         data={task}
                         onRemove={this.hendleDelete}
@@ -150,8 +247,8 @@ class Todo extends PureComponent {
             <div>
                 <Container>
                     <Container>
-                        <Row className="justify-content-center">
-                            <Col md={8} xl={2} lg={3} sm={6}>
+                        <Row className="justify-content-center pt-4">
+                            <Col xs={6} lg={4}>
                                 <AddTask
                                     onAdd={this.hendleClick}
                                     disabled={!!selectedCard.size}
@@ -164,9 +261,9 @@ class Todo extends PureComponent {
                         {tasksArr}
                     </Row>
                     <Row>
-                        <Col xs={4}>
+                        <Col xs={6} className="removAll">
                             <Button
-                                variant='outline-danger'
+                                variant='danger'
                                 onClick={this.toggleConfirm}
                                 disabled={selectedCard.size === 0 ? true : false}
                             >

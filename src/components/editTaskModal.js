@@ -11,18 +11,18 @@ export default class EditTaskModal extends Component {
     }
     hendleTextChange=(event)=>{
         this.setState({ 
-            text:event.target.value
+            title:event.target.value
         });
     }
     hendleSave=()=>{
-        const {text}=this.state;
-        if(!text){
+        const {title}=this.state;
+        if(!title){
             return
         }
         this.props.onSave(this.state);
     }
     render() {
-        const {text}= this.state
+        const {title}= this.state
         const {props}=this;
         return (
             <Modal show={true} onHide={props.onClose} animation={false}>
@@ -33,7 +33,7 @@ export default class EditTaskModal extends Component {
                     <input 
                     type="text" 
                     className="inp"
-                    value={text} 
+                    value={title} 
                     onChange={this.hendleTextChange} 
                     />
                 </Modal.Body>

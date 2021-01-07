@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { Button, Card } from 'react-bootstrap';
 import './card.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash, faUserEdit } from '@fortawesome/free-solid-svg-icons'
+
 
 
 class MyCard extends Component {
@@ -14,8 +17,9 @@ class MyCard extends Component {
         const {selectedCard} = this.props
         return (
             <Card className={selectedCard ? 'task' : ''}>
-                <Card.Body>
-                    <input
+                <Card.Body className='cardStyle'>
+                    <input 
+                        className='mb-3'
                         type="checkbox"
                         onClick={() => this.props.onCheacke(task._id)}
                         key={task._id}
@@ -31,24 +35,27 @@ class MyCard extends Component {
                             {/* ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ՍԿԻԶԲ */}
 
                     <Card.Title>{task.title}</Card.Title>
-                    <Card.Text>
+                    
+
+                    {/* <Card.Text>
                         {task.description}
-                    </Card.Text>
+                    </Card.Text> */}
 
                             {/* ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ԱՎԱՐՏ */}
-
-                    <Button 
-                        variant="danger" 
-                        onClick={() => this.props.onRemove(task._id)} 
-                        disabled={disabled}>
-                        Delete
-                    </Button>
-                    <Button 
-                        variant="primary" 
-                        onClick={() => this.props.onEdit(task)} 
-                        disabled={disabled}>
-                        Edit
-                    </Button>
+                    <div>
+                        <Button className="m-1 Button"
+                            variant="danger" 
+                            onClick={() => this.props.onRemove(task._id)} 
+                            disabled={disabled}>
+                            <FontAwesomeIcon icon={faTrash} />
+                        </Button>
+                        <Button className="m-1"
+                            variant="primary" 
+                            onClick={() => this.props.onEdit(task)} 
+                            disabled={disabled}>
+                            <FontAwesomeIcon icon={faUserEdit} />
+                        </Button>
+                    </div>
                 </Card.Body>
             </Card>
         );
