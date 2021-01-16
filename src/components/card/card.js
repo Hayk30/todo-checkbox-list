@@ -3,6 +3,8 @@ import { Button, Card } from 'react-bootstrap';
 import './card.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faUserEdit } from '@fortawesome/free-solid-svg-icons'
+import {formDate} from "../util";
+
 
 
 
@@ -37,9 +39,15 @@ class MyCard extends Component {
                     <Card.Title>{task.title}</Card.Title>
                     
 
-                    {/* <Card.Text>
-                        {task.description}
-                    </Card.Text> */}
+                    <Card.Text className="textsty">
+                        Description: {task.description}
+                    </Card.Text>
+                    <Card.Text>
+                        Date: {formDate(task.date)}
+                    </Card.Text>
+                    <Card.Text>
+                        Create At: {formDate(task.created_at)}
+                    </Card.Text>
 
                             {/* ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ԱՎԱՐՏ */}
                     <div>

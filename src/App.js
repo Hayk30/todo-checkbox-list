@@ -1,4 +1,4 @@
-import Todo from './components/todo';
+import Todo from './components/todo/todo';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 

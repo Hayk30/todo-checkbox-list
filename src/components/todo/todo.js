@@ -3,10 +3,10 @@ import React, { PureComponent } from 'react';
 import './todo.css'
 import { Button, Container, Row, Col } from 'react-bootstrap';
 // import idGenerator from './idGenerator'; // ԱՌԱՆՑ  ՍԵՐՎԵՐ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ 
-import MyCard from './card'
-import AddTask from './addTasks';
-import Confirm from './removeModal';
-import EditTaskModal from './editTaskModal';
+import MyCard from '../card/card'
+import AddTask from '../addTasks/addTasks';
+import Confirm from '../removeModal/removeModal';
+import EditTaskModal from '../editTaskModal/editTaskModal';
 
 class Todo extends PureComponent {
     state = {
@@ -14,9 +14,10 @@ class Todo extends PureComponent {
         tasks: [],
         selectedCard: new Set(),
         toggle: false,
+        openNewTaskModal: false,
     }
 
-        // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ՍԿԻԶԲ
+    // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ՍԿԻԶԲ
 
     componentDidMount() {
         fetch("http://localhost:3001/task", {
@@ -25,21 +26,21 @@ class Todo extends PureComponent {
                 "content-type": "application/json",
             },
         })
-        .then((response) =>  response.json())
-        .then((response) => {
-            if(response.error) {
-                throw response.error
-            }
-            this.setState({
-                tasks: response,
-            })       
-        }) 
-        .catch((error) => {
-            console.log(error)
-        })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.error) {
+                    throw response.error
+                }
+                this.setState({
+                    tasks: response,
+                })
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 
-        // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ԱՎԱՐՏ
+    // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ԱՎԱՐՏ
 
     onCheacke = (taskId) => {
         const selectedCard = new Set(this.state.selectedCard)
@@ -52,7 +53,7 @@ class Todo extends PureComponent {
             selectedCard: selectedCard
         })
     }
-                // ԱՌԱՆՑ  ՍԵՐՎԵՐ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ
+    // ԱՌԱՆՑ  ՍԵՐՎԵՐ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ
 
     // hendleClick = (value) => {
     //     const myId = {
@@ -66,9 +67,10 @@ class Todo extends PureComponent {
     //     })
     // }
 
-                // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ՍԿԻԶԲ
+    // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ՍԿԻԶԲ
 
     hendleClick = (data) => {
+        console.log(data)
         const body = JSON.stringify(data)
         fetch("http://localhost:3001/task", {
             method: "POST",
@@ -77,24 +79,25 @@ class Todo extends PureComponent {
             },
             body
         })
-        .then((response) =>  response.json())
-        .then((response) => {
-            if(response.error) {
-                throw response.error
-            }
-            const tasks = [response, ...this.state.tasks]
-            this.setState({
-                tasks: tasks,
-            })       
-        })
-        .catch((error) => {
-            console.log(error)
-        })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.error) {
+                    throw response.error
+                }
+                const tasks = [response, ...this.state.tasks]
+                this.setState({
+                    tasks: tasks,
+                    openNewTaskModal: false,
+                })
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 
-                // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ԱՎԱՐՏ
+    // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ԱՎԱՐՏ
 
-                // ԱՌԱՆՑ  ՍԵՐՎԵՐ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ
+    // ԱՌԱՆՑ  ՍԵՐՎԵՐ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ
 
     // hendleDelete = (taskId) => {
     //     const delId = this.state.tasks.filter(task => task._id !== taskId);
@@ -114,7 +117,7 @@ class Todo extends PureComponent {
     //         selectedCard: new Set()
     //     })
     // }
-                 // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ՍԿԻԶԲ
+    // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ՍԿԻԶԲ
 
     hendleDelete = (taskId) => {
         fetch(`http://localhost:3001/task/${taskId}`, {
@@ -123,23 +126,23 @@ class Todo extends PureComponent {
                 "content-type": "application/json",
             },
         })
-        .then((response) =>  response.json())
-        .then((response) => {
-            if(response.error) {
-                throw response.error
-            }
-            const delId = this.state.tasks.filter(task => task._id !== taskId);
-            this.setState({
-                tasks: delId,
-            })      
-        })
-        .catch((error) => {
-            console.log(error)
-        })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.error) {
+                    throw response.error
+                }
+                const delId = this.state.tasks.filter(task => task._id !== taskId);
+                this.setState({
+                    tasks: delId,
+                })
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 
     handleRemove = () => {
-        const body={
+        const taskIds = {
             tasks: [...this.state.selectedCard]
         }
 
@@ -148,44 +151,44 @@ class Todo extends PureComponent {
             headers: {
                 "content-type": "application/json",
             },
-            body: JSON.stringify(body),
+            body: JSON.stringify(taskIds),
         })
-        .then((response) =>  response.json())
-        .then((response) => {
-            if(response.error) {
-                throw response.error
-            }
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.error) {
+                    throw response.error
+                }
 
-            let tasks = [...this.state.tasks]
+                let tasks = [...this.state.tasks]
 
-            this.state.selectedCard.forEach((id) => {
-                tasks = tasks.filter((task) => task._id !== id)
+                this.state.selectedCard.forEach((id) => {
+                    tasks = tasks.filter((task) => task._id !== id)
+                })
+                this.setState({
+                    tasks,
+                    toggle: false,
+                    selectedCard: new Set()
+                })
             })
-            this.setState({
-                tasks,
-                toggle:false,
-                selectedCard: new Set()
-            })     
-        })
-        .catch((error) => {
-            console.log(error)
-        })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 
-                // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ԱՎԱՐՏ
+    // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ԱՎԱՐՏ
 
     toggleConfirm = () => {
         this.setState({
             toggle: !this.state.toggle
         })
     }
-    toggleEditModal=(task)=> {
+    toggleEditModal = (task) => {
         this.setState({
             editTask: task
         })
     }
 
-                // ԱՌԱՆՑ  ՍԵՐՎԵՐ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ
+    // ԱՌԱՆՑ  ՍԵՐՎԵՐ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ
 
     // saveTask=(editedTask)=> {
     //     const tasks=[...this.state.tasks]
@@ -197,9 +200,9 @@ class Todo extends PureComponent {
     //     })
     // }
 
-                 // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ՍԿԻԶԲ
-    
-    saveTask=(editedTask)=> {
+    // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ՍԿԻԶԲ
+
+    saveTask = (editedTask) => {
         fetch(`http://localhost:3001/task/${editedTask._id}`, {
             method: "PUT",
             headers: {
@@ -207,37 +210,43 @@ class Todo extends PureComponent {
             },
             body: JSON.stringify(editedTask),
         })
-        .then((response) =>  response.json())
-        .then((response) => {
-            if(response.error) {
-                throw response.error
-            }
-            const tasks=[...this.state.tasks]
-            const foundTextIndex=tasks.findIndex((task)=>task._id === editedTask._id)
-            tasks[foundTextIndex]=response
-            this.setState({
-                tasks:tasks,
-                editTask: null,
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.error) {
+                    throw response.error
+                }
+                const tasks = [...this.state.tasks]
+                const foundTextIndex = tasks.findIndex((task) => task._id === response._id)
+                tasks[foundTextIndex] = response
+                this.setState({
+                    tasks: tasks,
+                    editTask: null,
+                })
+
             })
-                 
-        })
-        .catch((error) => {
-            console.log(error)
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
+    // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ԱՎԱՐՏ
+
+    togglenNewTaskModal=()=>{
+        this.setState({
+            openNewTaskModal:!this.state.openNewTaskModal
         })
     }
-                // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ԱՎԱՐՏ
-
     render() {
-        const { toggle, selectedCard, editTask } = this.state
+        const { toggle, selectedCard, editTask, openNewTaskModal } = this.state
         const tasksArr = this.state.tasks.map((task, i) => {
             return (
-                <Col key={i} xs={6} md={3} xl={2} className='mb-3'>
+                <Col key={i} xs={6} sm={6} md={4} lg={3} className='mb-3'>
                     <MyCard
                         data={task}
                         onRemove={this.hendleDelete}
                         onCheacke={this.onCheacke}
                         disabled={!!selectedCard.size}
-                        onEdit={()=>this.toggleEditModal(task)}
+                        onEdit={() => this.toggleEditModal(task)}
                     />
                 </Col>
 
@@ -248,11 +257,14 @@ class Todo extends PureComponent {
                 <Container>
                     <Container>
                         <Row className="justify-content-center pt-4">
-                            <Col xs={6} lg={4}>
-                                <AddTask
-                                    onAdd={this.hendleClick}
+                            <Col xs={6} lg={4} className="addNewTask">
+                                <Button
+                                    variant="outline-primary"
+                                    onClick={this.togglenNewTaskModal}
                                     disabled={!!selectedCard.size}
-                                />
+                                >
+                                    Add new task
+                                </Button>
                             </Col>
                         </Row>
                     </Container>
@@ -273,11 +285,11 @@ class Todo extends PureComponent {
                     </Row>
                 </Container>
                 {toggle &&
-                <Confirm
-                    onSubmite={this.handleRemove}
-                    onClose={this.toggleConfirm}
-                    count={selectedCard.size}
-                />
+                    <Confirm
+                        onSubmite={this.handleRemove}
+                        onClose={this.toggleConfirm}
+                        count={selectedCard.size}
+                    />
                 }
                 {
                     !!editTask &&
@@ -285,6 +297,14 @@ class Todo extends PureComponent {
                         data={editTask}
                         onSave={this.saveTask}
                         onClose={() => this.toggleEditModal(null)}
+                    />
+                }
+                {
+                    openNewTaskModal &&
+                    <AddTask
+                        onAdd={this.hendleClick}
+                        disabled={!!selectedCard.size}
+                        onClose={this.togglenNewTaskModal}
                     />
                 }
 
