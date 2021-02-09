@@ -1,0 +1,14 @@
+.task{
+    border: 2px solid #b6f508!important;
+    display: flex!important;
+    flex-direction: column!important;
+    align-items: center!important;
+}
+.Button{
+    padding: 6px 15px 6px 15px!important;
+}
+.cardStyle{
+    display: flex!important;
+    flex-direction: column!important;
+    align-items: center!important;
+}
