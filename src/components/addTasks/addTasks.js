@@ -3,7 +3,7 @@ import { Button, FormControl, Modal } from 'react-bootstrap';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import './addTasks.css'
-import {formDate} from "../util";
+import {formDate} from "../util/util";
 
 
 

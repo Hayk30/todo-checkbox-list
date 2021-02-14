@@ -1,8 +1,8 @@
-.task{
-    border: 2px solid #b6f508!important;
-    display: flex!important;
-    flex-direction: column!important;
-    align-items: center!important;
+.task{ 
+    box-shadow: 0px 0px 29px 5px #a6b1bd;
+    background-color: transparent!important;
+    color: white;
+    font-weight: 600;
 }
 .Button{
     padding: 6px 15px 6px 15px!important;
@@ -11,4 +11,7 @@
     display: flex!important;
     flex-direction: column!important;
     align-items: center!important;
+}
+.cardLink{
+    color: #fff;
 }
