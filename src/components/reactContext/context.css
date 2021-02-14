@@ -1,0 +1,18 @@
+.contextA{
+    text-align: center;
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+}
+.contextA p{
+    color: #007bff;
+    font-weight: 900;
+    font-size: 22px;
+    font-family: 'Lobster', cursive;
+}
+.contextA button{
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+    font-weight: 600;
+}

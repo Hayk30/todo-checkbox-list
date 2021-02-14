@@ -256,10 +256,10 @@ class Todo extends PureComponent {
             <div>
                 <Container>
                     <Container>
-                        <Row className="justify-content-center pt-4">
+                        <Row className="justify-content-center pt-4 mb-5">
                             <Col xs={6} lg={4} className="addNewTask">
                                 <Button
-                                    variant="outline-primary"
+                                    variant="primary"
                                     onClick={this.togglenNewTaskModal}
                                     disabled={!!selectedCard.size}
                                 >
@@ -272,7 +272,7 @@ class Todo extends PureComponent {
                     <Row>
                         {tasksArr}
                     </Row>
-                    <Row>
+                    <Row className="mt-5">
                         <Col xs={6} className="removAll">
                             <Button
                                 variant='danger'

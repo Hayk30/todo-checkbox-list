@@ -2,12 +2,15 @@ import Todo from './components/todo/todo';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Route, Switch } from 'react-router-dom'
-import AboutUs from './components/abouUs';
-import ContactUs from './components/contactUs';
-import Blog from './components/blog';
-import ErrorPage from './components/errorPage';
-import SingleTask from './components/singleTask';
-import NavMenu from './components/navMenu';
+import AboutUs from './components/about/abouUs';
+import ContactUs from './components/contact/contactUs';
+import Blog from './components/blog/blog';
+import ErrorPage from './components/error/errorPage';
+import SingleTask from './components/singltask/singleTask';
+import NavMenu from './components/navmenu/navMenu';
+import Lifesicle from './components/lifeSicle/lifesSicles'
+import CounterHook from './components/hooks/hooks'
+import A from './components/reactContext/A'
 // import { NavItem } from 'react-bootstrap';
 
 function App() {
@@ -34,11 +37,22 @@ function App() {
       component: SingleTask
     },
     {
+      path: '/lifeSicle',
+      component: Lifesicle
+    },
+    {
+      path: '/counterhooks',
+      component: CounterHook
+    },
+    {
+      path: '/reactcontext',
+      component: A
+    },
+    {
       path: '/404',
       component: ErrorPage
     },
   ]
-
   return (
     <>
       <div className="App">

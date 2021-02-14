@@ -3,7 +3,7 @@ import { Button, Card } from 'react-bootstrap';
 import './card.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faUserEdit } from '@fortawesome/free-solid-svg-icons'
-import { formDate } from "../util";
+import { formDate } from "../util/util";
 import { Link } from 'react-router-dom'
 
 class MyCard extends Component {
@@ -14,9 +14,9 @@ class MyCard extends Component {
     render() {
         const task = this.props.data
         const { disabled } = this.props
-        const { selectedCard } = this.props
+        // const { selectedCard } = this.props
         return (
-            <Card className={selectedCard ? 'task' : ''}>
+            <Card className='task'>
                 <Card.Body className='cardStyle'>
                     <input
                         className='mb-3'
@@ -35,7 +35,7 @@ class MyCard extends Component {
                     {/* ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ՍԿԻԶԲ */}
 
                     <Card.Title>
-                        <Link to={`/singleTask/${task._id}`}>
+                        <Link className="cardLink" to={`/singleTask/${task._id}`}>
                             {task.title}
                         </Link>
 
