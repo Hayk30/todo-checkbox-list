@@ -11,6 +11,8 @@ import NavMenu from './components/navmenu/navMenu';
 import Lifesicle from './components/lifeSicle/lifesSicles'
 import CounterHook from './components/hooks/hooks'
 import A from './components/reactContext/A'
+import Counter from "./components/reduxExample/counter"
+
 // import { NavItem } from 'react-bootstrap';
 
 function App() {
@@ -47,6 +49,10 @@ function App() {
     {
       path: '/reactcontext',
       component: A
+    },
+    {
+      path: '/redux',
+      component: Counter
     },
     {
       path: '/404',
