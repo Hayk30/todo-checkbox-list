@@ -15,8 +15,7 @@ export default function NavMenu() {
                 <Link to="/blog" >Blog</Link>
                 <Link to="/lifeSicle" >LifeSicle</Link>
                 <Link to="/counterhooks" >CounterHooks</Link>
-                <Link to="/reactcontext" >ReactContext</Link>
-                <Link to="/redux" >ReduxExample</Link>                
+                <Link to="/reactcontext" >ReactContext</Link>              
             </Nav>
         </Navbar>
     )

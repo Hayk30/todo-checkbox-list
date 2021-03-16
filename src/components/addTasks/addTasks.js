@@ -4,12 +4,10 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import './addTasks.css'
 import {formDate} from "../util/util";
-import {connect} from 'react-redux'
-import {addTask} from '../reduxExample/action'
 
 
 
-class AddTask extends Component {
+export default class AddTask extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -18,6 +16,20 @@ class AddTask extends Component {
             date: new Date(),
         }
     }
+     // ԱՌԱՆՑ  ՍԵՐՎԵՐ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ
+
+    // hendleClick = (value) => {
+    //     const {inpValues}= this.state
+    //     if(!inpValues){
+    //         return
+    //     }
+    //     this.props.onAdd(inpValues)
+    //     this.setState({
+    //         inpValues: ''
+    //     })
+    // }
+
+    // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ
 
     hendleChange = (ev, type) => {
         console.log(type);
@@ -41,8 +53,8 @@ class AddTask extends Component {
             description,
             date: formDate(date.toISOString()),
         }
-        this.props.addTask(task)
-        // this.props.onAdd(task)
+       
+        this.props.onAdd(task)
 
     }
 
@@ -102,7 +114,3 @@ class AddTask extends Component {
     }
 }
 
-const mapDispatchToProps =  {
-    addTask
-}
-export default connect(null, mapDispatchToProps)(AddTask)
