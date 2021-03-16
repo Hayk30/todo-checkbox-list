@@ -1,4 +1,0 @@
-export const LOADING= 'LOADING'
-export const GET_TASKS_SUCCESS= 'GET_TASKS_SUCCESS'
-export const ERROR= 'ERROR'
-export const ADD_TASK_SUCCESS= 'ADD_TASK_SUCCESS'
