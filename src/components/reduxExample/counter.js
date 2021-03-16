@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ChangeCounter from './changeCounter';
 import ShowCounter from './showCounter';
+import Message from './message'
 
 class Counter extends Component {
     state={
@@ -19,6 +20,7 @@ class Counter extends Component {
                 <ChangeCounter
                     onchangeValue={this.onHendleValue}
                 />
+                <Message/>
             </div>
         )
     }

@@ -7,40 +7,26 @@ import MyCard from '../card/card'
 import AddTask from '../addTasks/addTasks';
 import Confirm from '../removeModal/removeModal';
 import EditTaskModal from '../editTaskModal/editTaskModal';
+import { connect } from 'react-redux'
+import { getTask } from '../reduxExample/action'
 
 class Todo extends PureComponent {
     state = {
         editTask: null,
-        tasks: [],
         selectedCard: new Set(),
         toggle: false,
         openNewTaskModal: false,
     }
 
-    // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ՍԿԻԶԲ
-
     componentDidMount() {
-        fetch("http://localhost:3001/task", {
-            method: "GET",
-            headers: {
-                "content-type": "application/json",
-            },
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                if (response.error) {
-                    throw response.error
-                }
-                this.setState({
-                    tasks: response,
-                })
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+        this.props.getTask()
     }
 
-    // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ԱՎԱՐՏ
+    componentDidUpdate (prevProps) {
+        if(!prevProps.addTaskSuccess && this.props.addTaskSuccess){
+            this.togglenNewTaskModal()
+        }
+    }
 
     onCheacke = (taskId) => {
         const selectedCard = new Set(this.state.selectedCard)
@@ -53,71 +39,6 @@ class Todo extends PureComponent {
             selectedCard: selectedCard
         })
     }
-    // ԱՌԱՆՑ  ՍԵՐՎԵՐ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ
-
-    // hendleClick = (value) => {
-    //     const myId = {
-    //         text: value,
-    //         _id: idGenerator()
-    //     }
-    //     const newTasks = [myId, ...this.state.tasks]
-
-    //     this.setState({
-    //         tasks: newTasks,
-    //     })
-    // }
-
-    // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ՍԿԻԶԲ
-
-    hendleClick = (data) => {
-        console.log(data)
-        const body = JSON.stringify(data)
-        fetch("http://localhost:3001/task", {
-            method: "POST",
-            headers: {
-                "content-type": "application/json",
-            },
-            body
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                if (response.error) {
-                    throw response.error
-                }
-                const tasks = [response, ...this.state.tasks]
-                this.setState({
-                    tasks: tasks,
-                    openNewTaskModal: false,
-                })
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-    }
-
-    // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ԱՎԱՐՏ
-
-    // ԱՌԱՆՑ  ՍԵՐՎԵՐ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ
-
-    // hendleDelete = (taskId) => {
-    //     const delId = this.state.tasks.filter(task => task._id !== taskId);
-    //     this.setState({
-    //         tasks: delId,
-    //     })
-    // }
-
-    // handleRemove = () => {
-    //     let tasks = [...this.state.tasks]
-    //     this.state.selectedCard.forEach((id) => {
-    //         tasks = tasks.filter((task) => task._id !== id)
-    //     })
-    //     this.setState({
-    //         tasks,
-    //         toggle:false,
-    //         selectedCard: new Set()
-    //     })
-    // }
-    // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ՍԿԻԶԲ
 
     hendleDelete = (taskId) => {
         fetch(`http://localhost:3001/task/${taskId}`, {
@@ -131,7 +52,7 @@ class Todo extends PureComponent {
                 if (response.error) {
                     throw response.error
                 }
-                const delId = this.state.tasks.filter(task => task._id !== taskId);
+                const delId = this.props.tasks.filter(task => task._id !== taskId);
                 this.setState({
                     tasks: delId,
                 })
@@ -159,7 +80,7 @@ class Todo extends PureComponent {
                     throw response.error
                 }
 
-                let tasks = [...this.state.tasks]
+                let tasks = [...this.props.tasks]
 
                 this.state.selectedCard.forEach((id) => {
                     tasks = tasks.filter((task) => task._id !== id)
@@ -175,7 +96,7 @@ class Todo extends PureComponent {
             })
     }
 
-    // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ԱՎԱՐՏ
+
 
     toggleConfirm = () => {
         this.setState({
@@ -188,19 +109,7 @@ class Todo extends PureComponent {
         })
     }
 
-    // ԱՌԱՆՑ  ՍԵՐՎԵՐ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ
 
-    // saveTask=(editedTask)=> {
-    //     const tasks=[...this.state.tasks]
-    //     const foundTextIndex=tasks.findIndex((task)=>task._id === editedTask._id)
-    //     tasks[foundTextIndex]=editedTask
-    //     this.setState({
-    //         tasks:tasks,
-    //         editTask: null,
-    //     })
-    // }
-
-    // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ՍԿԻԶԲ
 
     saveTask = (editedTask) => {
         fetch(`http://localhost:3001/task/${editedTask._id}`, {
@@ -215,7 +124,7 @@ class Todo extends PureComponent {
                 if (response.error) {
                     throw response.error
                 }
-                const tasks = [...this.state.tasks]
+                const tasks = [...this.props.tasks]
                 const foundTextIndex = tasks.findIndex((task) => task._id === response._id)
                 tasks[foundTextIndex] = response
                 this.setState({
@@ -229,16 +138,16 @@ class Todo extends PureComponent {
             })
     }
 
-    // ՍԵՐՎԵՐՈՎ ՏԱՐԲԵՐԱԿԻ ԴԵՊՔՈՒՄ ԱՎԱՐՏ
 
-    togglenNewTaskModal=()=>{
+
+    togglenNewTaskModal = () => {
         this.setState({
-            openNewTaskModal:!this.state.openNewTaskModal
+            openNewTaskModal: !this.state.openNewTaskModal
         })
     }
     render() {
         const { toggle, selectedCard, editTask, openNewTaskModal } = this.state
-        const tasksArr = this.state.tasks.map((task, i) => {
+        const tasksArr = this.props.tasks.map((task, i) => {
             return (
                 <Col key={i} xs={6} sm={6} md={4} lg={3} className='mb-3'>
                     <MyCard
@@ -302,7 +211,6 @@ class Todo extends PureComponent {
                 {
                     openNewTaskModal &&
                     <AddTask
-                        onAdd={this.hendleClick}
                         disabled={!!selectedCard.size}
                         onClose={this.togglenNewTaskModal}
                     />
@@ -313,4 +221,14 @@ class Todo extends PureComponent {
     }
 }
 
-export default Todo;
+const mapStateToProps = (state) => {
+    return {
+        tasks: state.tasks,
+        addTaskSuccess: state.addTaskSuccess
+    }
+}
+const mapDispatchToProps = {
+    getTask: getTask
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Todo);

@@ -12,10 +12,15 @@ import Lifesicle from './components/lifeSicle/lifesSicles'
 import CounterHook from './components/hooks/hooks'
 import A from './components/reactContext/A'
 import Counter from "./components/reduxExample/counter"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { connect, connerct } from 'react-redux'
+import Spinner from './components/Loader/loader'
+
 
 // import { NavItem } from 'react-bootstrap';
 
-function App() {
+function App(props) {
 
   const routes = [
     {
@@ -59,6 +64,25 @@ function App() {
       component: ErrorPage
     },
   ]
+
+  // const notify = () => toast.success('🦄 Wow so easy!', {
+  //   position: "bottom-left",
+  //   autoClose: 5000,
+  //   hideProgressBar: false,
+  //   closeOnClick: true,
+  //   pauseOnHover: true,
+  //   draggable: true,
+  //   progress: undefined,
+  // });
+
+  const { errorMessage, successMessage, loading } = props
+
+  if (errorMessage) {
+    toast.error(errorMessage)
+  }
+  if (successMessage) {
+    toast.success(successMessage)
+  }
   return (
     <>
       <div className="App">
@@ -72,9 +96,29 @@ function App() {
           />)
           }
         </Switch>
+
+        <ToastContainer
+          position="bottom-left"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+        {console.log(loading)}
+        {loading && <Spinner />}
       </div>
     </>
   );
 }
-
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    errorMessage: state.error,
+    successMessage:state.successMessage,
+    loading: state.loading
+  }
+}
+export default connect(mapStateToProps)(App);
